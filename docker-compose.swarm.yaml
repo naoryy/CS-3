@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0 # Sesuaikan versi
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    deploy:
+      mode: global # cAdvisor berjalan di semua node Swarm
+
+  collector:
+    image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
+    environment:
+      - CADVISOR_URL=http://localhost:8080 # Akses cadvisor di node yang sama
+      - API_URL=https://aca-monitoring-api.azurewebsites.net/api/metrics # Mengarah ke Azure ACA Anda
+    deploy:
+      mode: global

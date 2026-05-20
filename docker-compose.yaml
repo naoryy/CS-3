@@ -1,0 +1,86 @@
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=Admin123!
+      - DOCKER_INFLUXDB_INIT_ORG=knowledgehub
+      - DOCKER_INFLUXDB_INIT_BUCKET=metrics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=1jxpyy51EgsZiH7grClMk5ta9TeeOyIs3B7UscBWWhVWgH8JFZPTdY57FIdEE5MGm20-pbTpt419vRRZAWVuqg==
+    networks:
+      - monitoring-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run:/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+    networks:
+      - monitoring-network  
+
+  collector:
+    build: ./Collector Script
+    container_name: metrics-collector
+    depends_on:
+      - cadvisor
+    environment:
+      - CADVISOR_URL=http://cadvisor:8080/api/v1.3/containers/
+      - API_URL=http://api:5000/metrics
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+
+  api:
+      build: ./API Script
+      container_name: api
+      depends_on:
+        - influxdb
+        - cadvisor
+      environment:
+        - INFLUXDB_URL=http://influxdb:8086
+        - DOCKER_INFLUXDB_INIT_MODE=setup
+        - DOCKER_INFLUXDB_INIT_USERNAME=admin
+        - DOCKER_INFLUXDB_INIT_PASSWORD=Admin123!
+        - DOCKER_INFLUXDB_INIT_ORG=knowledgehub
+        - DOCKER_INFLUXDB_INIT_BUCKET=metrics
+        - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=1jxpyy51EgsZiH7grClMk5ta9TeeOyIs3B7UscBWWhVWgH8JFZPTdY57FIdEE5MGm20-pbTpt419vRRZAWVuqg==
+      ports:
+        - "5000:5000"
+      networks:
+        - monitoring-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - monitoring-network
+
+networks:
+  monitoring-network:
+    driver: bridge
+
+volumes:
+  influxdb_data:
+  grafana_data:

@@ -1,0 +1,15 @@
+# Menggunakan image python yang ringan
+FROM python:3.9-slim
+
+# Set working directory di dalam container
+WORKDIR /app
+
+# Copy requirements dan install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code script
+COPY collector.py .
+
+# Jalankan script
+CMD ["python", "-u", "collector.py"]
