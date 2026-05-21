@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
-  AZURE_CONTAINER_REGISTRY: "acrknowledgehub.azurecr.io" # Ganti dengan nama ACR Anda
+  AZURE_CONTAINER_REGISTRY: "monitoringapp.azurecr.io"
   API_IMAGE_NAME: "monitoring-api"
   COLLECTOR_IMAGE_NAME: "metrics-collector"
 
