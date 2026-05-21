@@ -57,6 +57,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Register Microsoft.App Provider
+      run: |
+        az provider register -n Microsoft.App --wait
+
     - name: Deploy API to Azure Container Apps
       uses: azure/container-apps-deploy-action@v1
       with:
