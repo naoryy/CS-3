@@ -33,14 +33,14 @@ jobs:
 
     - name: Build and Push API Image to ACR
       run: |
-        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} -f api/Dockerfile ./api
+        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} -f api/Dockerfile ./API Script
         docker tag ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:latest
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:latest
 
     - name: Build and Push Collector Image to ACR
       run: |
-        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} -f collector/Dockerfile ./collector
+        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} -f collector/Dockerfile ./Collector Script
         docker tag ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:latest
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:latest
@@ -57,12 +57,12 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy API Middleware to Azure Container Apps
+    - name: Deploy API to Azure Container Apps
       uses: azure/container-apps-deploy-action@v1
       with:
         imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
         containerAppName: 'aca-monitoring-api'
-        resourceGroup: 'rg-knowledge-hub'
+        resourceGroup: 'App'
 
     # Catatan: InfluxDB & Grafana bisa di-deploy lewat Terraform atau manifest ACA Anda, 
     # namun image custom API dideploy otomatis melalui langkah di atas.
