@@ -8,6 +8,7 @@ env:
   AZURE_CONTAINER_REGISTRY: "monitoringapp.azurecr.io"
   API_IMAGE_NAME: "monitoring-api"
   COLLECTOR_IMAGE_NAME: "metrics-collector"
+  LOCATION: "spaincentral"
 
 jobs:
   # ==========================================
@@ -63,6 +64,8 @@ jobs:
         imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
         containerAppName: 'aca-monitoring-api'
         resourceGroup: 'App'
+        location: ${{ env.LOCATION }}
+
 
     # Catatan: InfluxDB & Grafana bisa di-deploy lewat Terraform atau manifest ACA Anda, 
     # namun image custom API dideploy otomatis melalui langkah di atas.
