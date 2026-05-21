@@ -60,18 +60,8 @@ jobs:
 
     - name: Deploy API to Azure Container Apps
       run: |
-        az containerapp up \
-          --name 'aca-monitoring-api' \
-          --resource-group 'App' \
-          --location '${{ env.LOCATION }}' \
-          --image '${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}' \
-          --registry-server '${{ env.AZURE_CONTAINER_REGISTRY }}' \
-          --registry-username '${{ secrets.ACR_USERNAME }}' \
-          --registry-password '${{ secrets.ACR_PASSWORD }}' \
-          --ingress external \
-          --target-port 5000
-
-
+        az containerapp up --name 'aca-monitoring-api' --resource-group 'App' --location '${{ env.LOCATION }}' --image '${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}' --registry-server '${{ env.AZURE_CONTAINER_REGISTRY }}' --registry-username '${{ secrets.ACR_USERNAME }}' --registry-password '${{ secrets.ACR_PASSWORD }}' --ingress external --target-port 5000
+       
     # Catatan: InfluxDB & Grafana bisa di-deploy lewat Terraform atau manifest ACA Anda, 
     # namun image custom API dideploy otomatis melalui langkah di atas.
 
