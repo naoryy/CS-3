@@ -33,14 +33,14 @@ jobs:
 
     - name: Build and Push API Image to ACR
       run: |
-        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} -f api/Dockerfile ./API Script
+        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} -f "API Script/Dockerfile" "./API Script"
         docker tag ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }} ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:latest
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.API_IMAGE_NAME }}:latest
 
     - name: Build and Push Collector Image to ACR
       run: |
-        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} -f collector/Dockerfile ./Collector Script
+        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} -f "Collector Script/Dockerfile" "./Collector Script"
         docker tag ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }} ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:latest
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.COLLECTOR_IMAGE_NAME }}:latest
@@ -88,4 +88,4 @@ jobs:
         export ACR_URL=${{ env.AZURE_CONTAINER_REGISTRY }}
         
         # Mengeksekusi stack deployment di Swarm Manager
-        docker stack deploy --with-registry-auth -c docker-compose.swarm.yml monitoring_edge
+        docker stack deploy --with-registry-auth -c "docker-compose.swarm.yml" monitoring_edge
