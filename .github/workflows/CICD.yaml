@@ -59,7 +59,6 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy API to Azure Container Apps
-      uses: azure/container-apps-deploy-action@v1
       run: |
         az containerapp up \
           --name 'aca-monitoring-api' \
