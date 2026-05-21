@@ -65,6 +65,8 @@ jobs:
         containerAppName: 'aca-monitoring-api'
         resourceGroup: 'App'
         location: ${{ env.LOCATION }}
+        acrUsername: ${{ secrets.ACR_USERNAME }}
+        acrPassword: ${{ secrets.ACR_PASSWORD }}
 
 
     # Catatan: InfluxDB & Grafana bisa di-deploy lewat Terraform atau manifest ACA Anda, 
