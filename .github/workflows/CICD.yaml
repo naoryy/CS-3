@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Source Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Azure Login
       uses: azure/login@v1
@@ -73,7 +73,7 @@ jobs:
     runs-on: self-hosted  # CRITICAL: Berjalan di VM Swarm Manager lokal Anda!
     steps:
     - name: Checkout Source Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Login to ACR from Local Swarm
       run: |
