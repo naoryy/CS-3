@@ -86,4 +86,4 @@ jobs:
         export ACR_URL=${{ env.AZURE_CONTAINER_REGISTRY }}
         
         # Mengeksekusi stack deployment di Swarm Manager
-        docker stack deploy --with-registry-auth -c "docker-compose.swarm.yml" monitoring_edge
+        docker stack deploy --with-registry-auth -c "docker-compose.swarm.yaml" monitoring_edge
