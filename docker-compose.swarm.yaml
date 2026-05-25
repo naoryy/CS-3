@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1 # Sesuaikan versi
+    image: gcr.io/cadvisor/cadvisor:latest # Sesuaikan versi
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
