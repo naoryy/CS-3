@@ -1,21 +1,23 @@
 version: '3.8'
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.0 # Sesuaikan versi
+    image: gcr.io/cadvisor/cadvisor:v0.49.1 # Sesuaikan versi
     container_name: cadvisor
+    pull_policy: always
     volumes:
       - /:/rootfs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /run:/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
       - /rootfs/var/lib/docker/:/var/lib/docker/image:ro
+      - /proc:/proc:ro
     deploy:
       mode: global # cAdvisor berjalan di semua node Swarm
 
   collector:
     image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
+    pull_policy: always
     container_name: metrics-collector
     environment:
       - CADVISOR_URL=http://cadvisor:8080/api/v1.3/containers/
