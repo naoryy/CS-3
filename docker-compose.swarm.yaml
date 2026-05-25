@@ -10,7 +10,7 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
-      - /sys/fs/cgroup/:/cgroup:ro
+      - /rootfs/var/lib/docker/:/var/lib/docker/image:ro
     deploy:
       mode: global # cAdvisor berjalan di semua node Swarm
 
