@@ -13,7 +13,7 @@ services:
   collector:
     image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
     environment:
-      - CADVISOR_URL=http://localhost:8080 # Akses cadvisor di node yang sama
-      - API_URL=https://aca-monitoring-api.azurewebsites.net/api/metrics # Mengarah ke Azure ACA Anda
+      - CADVISOR_URL=http://localhost:8080/api/v1.3/containers/
+      - API_URL=https://aca-monitoring-api.politesea-d4b7dfa0.spaincentral.azurecontainerapps.io/metrics
     deploy:
       mode: global
