@@ -3,39 +3,16 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest # Sesuaikan versi
     container_name: cadvisor
-    mounts:
-    - type: bind
-      source: /
-      target: /rootfs
-      read_only: true
-    
-    - type: bind
-      source: /var/run/docker.sock
-      target: /var/run/docker.sock
-      read_only: true
-    
-    - type: bind
-      source: /run
-      target: /run
-      read_only: true
-    
-    - type: bind
-      source: /sys
-      target: /sys
-      read_only: true
-    
-    - type: bind
-      source: /var/lib/docker
-      target: /var/lib/docker
-      read_only: true
-    
-    - type: bind
-      source: /proc
-      target: /proc
-      read_only: true
-
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run:/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /proc:/proc:ro
+      - /cgroup:/cgroup:ro
     deploy:
-      mode: global
+      mode: global # cAdvisor berjalan di semua node Swarm
 
   collector:
     image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
