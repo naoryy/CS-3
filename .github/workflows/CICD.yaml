@@ -80,10 +80,14 @@ jobs:
         docker login ${{ env.AZURE_CONTAINER_REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" -p "${{ secrets.ACR_PASSWORD }}"
 
     - name: Deploy or Update Stack in Docker Swarm
-      run: |
-        # Substitusi tag image dinamis ke file docker-compose Swarm lokal
-        export IMAGE_TAG=${{ github.sha }}
-        export ACR_URL=${{ env.AZURE_CONTAINER_REGISTRY }}
-        
-        # Mengeksekusi stack deployment di Swarm Manager
-        docker stack deploy --with-registry-auth -c "docker-compose.swarm.yaml" monitoring_edge
+     - name: Deploy or Update Stack in Docker Swarm
+  run: |
+    # Set environment variables
+    export IMAGE_TAG=${{ github.sha }}
+    export ACR_URL=${{ env.AZURE_CONTAINER_REGISTRY }}
+    
+    # Substitute variables dalam compose file
+    envsubst < docker-compose.swarm.yaml > docker-compose.swarm.resolved.yaml
+    
+    # Deploy stack dengan file yang sudah di-resolve
+    docker stack deploy --with-registry-auth -c "docker-compose.swarm.resolved.yaml" monitoring_edge
