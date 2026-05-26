@@ -14,9 +14,6 @@ services:
       - target: 8080
         published: 8080
         mode: host          # ← publish ke host port tiap node
-    command:
-      - --docker_only=true
-      - --housekeeping_interval=30s
     deploy:
       mode: global
       restart_policy:

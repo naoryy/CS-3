@@ -4,8 +4,9 @@ import os
 import json
 
 # --- CONFIGURATION ---
-CADVISOR_URL = "http://cadvisor:8080/api/v1.3/docker/"
-API_URL = "https://aca-monitoring-api.politesea-d4b7dfa0.spaincentral.azurecontainerapps.io/metrics"
+# Baris 7 di collector.py — ubah ini:
+CADVISOR_URL = os.environ.get("CADVISOR_URL", "http://localhost:8080/api/v1.3/docker/")
+API_URL = os.environ.get("API_URL", "https://aca-monitoring-api.politesea-d4b7dfa0.spaincentral.azurecontainerapps.io/metrics")
 POLL_INTERVAL = 10 
 QUEUE_FILE = "metrics_queue.json"
 
