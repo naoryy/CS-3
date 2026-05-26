@@ -1,34 +1,38 @@
 version: '3.8'
+
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest # Sesuaikan versi
-    hostname: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
     privileged: true
     volumes:
-      - /:/rootfs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /run:/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /proc:/proc:ro
-    networks:
-      - monitoring_edge_default
+    ports:
+      - target: 8080
+        published: 8080
+        mode: host          # ← publish ke host port tiap node
+    command:
+      - --docker_only=true
+      - --housekeeping_interval=30s
     deploy:
-      mode: global # cAdvisor berjalan di semua node Swarm
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
 
   collector:
     image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
-    hostname: metrics-collector
+    network_mode: host      # ← pakai host network, bisa reach localhost:8080
     environment:
-      - CADVISOR_URL=http://cadvisor:8080/api/v1.3/containers/
+      - CADVISOR_URL=http://localhost:8080/api/v1.3/docker/
       - API_URL=https://aca-monitoring-api.politesea-d4b7dfa0.spaincentral.azurecontainerapps.io/metrics
-    networks:
-      - monitoring_edge_default
     deploy:
       mode: global
-
-networks:
-  monitoring_edge_default:
-    driver: overlay
-    driver_opts:
-      com.docker.network.driver.overlay.vxlanid: "4096"
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
