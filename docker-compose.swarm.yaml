@@ -24,3 +24,9 @@ services:
       - monitoring_edge_default
     deploy:
       mode: global
+      
+networks:
+  monitoring_edge_network:
+    driver: overlay
+    driver_opts:
+      com.docker.network.driver.overlay.vxlanid: "4096"
