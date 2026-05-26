@@ -10,11 +10,12 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /proc:/proc:ro
-    networks:
-      - monitoring
+    ports:
+      - target: 8080
+        published: 8080
+        mode: host            # cadvisor listen di host port 8080
     deploy:
       mode: global
-      endpoint_mode: dnsrr    # ← DNS round-robin, bukan VIP
       restart_policy:
         condition: on-failure
         delay: 10s
@@ -22,19 +23,14 @@ services:
 
   collector:
     image: ${ACR_URL}/metrics-collector:${IMAGE_TAG}
+    extra_hosts:
+      - "cadvisor:host-gateway"   # ← "cadvisor" resolve ke IP host lokal node ini
     environment:
       - CADVISOR_URL=http://cadvisor:8080/api/v1.3/docker/
       - API_URL=https://aca-monitoring-api.politesea-d4b7dfa0.spaincentral.azurecontainerapps.io/metrics
-    networks:
-      - monitoring             # ← network yang sama dengan cadvisor
     deploy:
       mode: global
       restart_policy:
         condition: on-failure
         delay: 10s
         max_attempts: 3
-
-networks:
-  monitoring:
-    driver: overlay
-    attachable: true
